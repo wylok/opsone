@@ -1,0 +1,746 @@
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: influxdb
+  namespace: opsone
+  annotations: {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: influxdb
+    spec:
+      volumes:
+        - name: influxdb-pvc
+          hostPath:
+            path: /mnt/opsone/influxdb-data
+            type: DirectoryOrCreate
+        - name: influxdb-config
+          configMap:
+            name: influxdb-config
+            defaultMode: 420
+      containers:
+        - name: influxdb
+          image: 'influxdb:1.8.4-alpine'
+          ports:
+            - name: influxdb
+              containerPort: 8086
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: influxdb-pvc
+              mountPath: /var/lib/influxdb
+              subPath: influxdb
+            - name: influxdb-config
+              mountPath: /etc/influxdb
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mysql
+  namespace: opsone
+  annotations: {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysql
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2024-05-08T11:19:22+08:00'
+    spec:
+      volumes:
+        - name: mysql-pvc
+          hostPath:
+            path: /mnt/opsone/mysql-data
+            type: DirectoryOrCreate
+      containers:
+        - name: mysql
+          image: 'mysql:8.0'
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: Opsone_2024
+          resources: {}
+          volumeMounts:
+            - name: mysql-pvc
+              mountPath: /var/lib/mysql
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: opsone-nginx
+  namespace: opsone
+  labels:
+    app: opsone-nginx
+  annotations: {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opsone-nginx
+  template:
+    metadata:
+      namespace: opsone
+      creationTimestamp: null
+      labels:
+        app: opsone-nginx
+    spec:
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: opsone-nginx
+            defaultMode: 420
+      containers:
+        - name: nginx
+          image: 'nginx:1.22.0'
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: nginx-config
+              readOnly: true
+              mountPath: /etc/nginx/conf.d/
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: opsone-platform
+  namespace: opsone
+  labels:
+    app: opsone-platform
+    purpose: prod
+  annotations:
+    descheduler.alpha.kubernetes.io/evict: 'true'
+    prometheus.io/scrape: 'true'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opsone-platform
+      purpose: prod
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: opsone-platform
+        purpose: prod
+      annotations:
+        descheduler.alpha.kubernetes.io/evict: 'true'
+        kubectl.kubernetes.io/restartedAt: '2024-05-21T15:59:13+08:00'
+        prometheus.io/scrape: 'true'
+    spec:
+      volumes:
+        - name: volume-localtime
+          hostPath:
+            path: /etc/localtime
+            type: ''
+        - name: opsone-config
+          configMap:
+            name: opsone-config
+            defaultMode: 420
+      containers:
+        - name: opsone-platform
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-platform:v3.3.11'
+          command:
+            - /app/opsone/platform
+          resources:
+            limits:
+              cpu: '2'
+              memory: 500Mi
+            requests:
+              cpu: 500m
+              memory: 300Mi
+          volumeMounts:
+            - name: opsone-config
+              mountPath: /app/opsone/static/config
+            - name: volume-localtime
+              mountPath: /etc/localtime
+          livenessProbe:
+            tcpSocket:
+              port: 8888
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 20%
+      maxSurge: 0%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 300
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: opsone-web
+  namespace: opsone
+  labels:
+    app: opsone-web
+    purpose: prod
+  annotations:
+    descheduler.alpha.kubernetes.io/evict: 'true'
+    prometheus.io/scrape: 'true'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opsone-web
+      purpose: prod
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: opsone-web
+        purpose: prod
+      annotations:
+        descheduler.alpha.kubernetes.io/evict: 'true'
+        prometheus.io/scrape: 'true'
+    spec:
+      volumes:
+        - name: volume-localtime
+          hostPath:
+            path: /etc/localtime
+            type: ''
+      containers:
+        - name: opsone-web
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v3.3.7'
+          resources:
+            limits:
+              cpu: 300m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+            - name: volume-localtime
+              mountPath: /etc/localtime
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 20%
+      maxSurge: 0%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 300
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: redis
+  namespace: opsone
+  labels:
+    app: redis
+  annotations: {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis
+    spec:
+      volumes:
+        - name: redis
+          emptyDir: {}
+      containers:
+        - name: redis
+          image: redis
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: redis
+              mountPath: /data
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-influxdb-svc
+  namespace: opsone
+  annotations: {}
+spec:
+  ports:
+    - name: influxdb
+      protocol: TCP
+      port: 8086
+      targetPort: 8086
+  selector:
+    app: influxdb
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-mysql-svc
+  namespace: opsone
+  annotations: {}
+spec:
+  ports:
+    - name: mysql
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+      nodePort: 30013
+  selector:
+    app: mysql
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-nginx-svc
+  namespace: opsone
+  labels:
+    app: opsone-nginx-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30800
+  selector:
+    app: opsone-nginx
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-platform-svc
+  namespace: opsone
+  annotations:
+    prometheus.io/scrape: 'true'
+spec:
+  ports:
+    - name: opsone-platform
+      protocol: TCP
+      port: 8888
+      targetPort: 8888
+      nodePort: 30798
+  selector:
+    app: opsone-platform
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-redis-svc
+  namespace: opsone
+  annotations: {}
+spec:
+  ports:
+    - name: redis
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: redis
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-web-svc
+  namespace: opsone
+  annotations:
+    prometheus.io/scrape: 'true'
+spec:
+  ports:
+    - name: opsone
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: opsone-web
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: influxdb-config
+  namespace: opsone
+data:
+  influxdb.conf: |+
+    reporting-disabled = false
+    bind-address = ":8088"
+
+    [meta]
+      dir = "/var/lib/influxdb/meta"
+      retention-autocreate = true
+      logging-enabled = true
+
+    [data]
+      dir = "/var/lib/influxdb/data"
+      index-version = "inmem"
+      wal-dir = "/var/lib/influxdb/wal"
+      wal-fsync-delay = "0s"
+      validate-keys = false
+      query-log-enabled = true
+      cache-max-memory-size = 1073741824
+      cache-snapshot-memory-size = 26214400
+      cache-snapshot-write-cold-duration = "10m0s"
+      compact-full-write-cold-duration = "4h0m0s"
+      compact-throughput = 50331648
+      compact-throughput-burst = 50331648
+      max-series-per-database = 1000000
+      max-values-per-tag = 100000
+      max-concurrent-compactions = 0
+      max-index-log-file-size = 1048576
+      series-id-set-cache-size = 100
+      series-file-max-concurrent-snapshot-compactions = 0
+      trace-logging-enabled = false
+      tsm-use-madv-willneed = false
+
+    [coordinator]
+      write-timeout = "10s"
+      max-concurrent-queries = 0
+      query-timeout = "0s"
+      log-queries-after = "0s"
+      max-select-point = 0
+      max-select-series = 0
+      max-select-buckets = 0
+
+    [retention]
+      enabled = true
+      check-interval = "30m0s"
+
+    [shard-precreation]
+      enabled = true
+      check-interval = "10m0s"
+      advance-period = "30m0s"
+
+    [monitor]
+      store-enabled = true
+      store-database = "_internal"
+      store-interval = "10s"
+
+    [subscriber]
+      enabled = true
+      http-timeout = "30s"
+      insecure-skip-verify = false
+      ca-certs = ""
+      write-concurrency = 40
+      write-buffer-size = 1000
+
+    [http]
+      enabled = true
+      bind-address = ":8086"
+      auth-enabled = false
+      log-enabled = true
+      suppress-write-log = false
+      write-tracing = false
+      flux-enabled = false
+      flux-log-enabled = false
+      pprof-enabled = true
+      pprof-auth-enabled = false
+      debug-pprof-enabled = false
+      ping-auth-enabled = false
+      prom-read-auth-enabled = false
+      https-enabled = false
+      https-certificate = "/etc/ssl/influxdb.pem"
+      https-private-key = ""
+      max-row-limit = 0
+      max-connection-limit = 0
+      shared-secret = ""
+      realm = "InfluxDB"
+      unix-socket-enabled = false
+      unix-socket-permissions = "0777"
+      bind-socket = "/var/run/influxdb.sock"
+      max-body-size = 25000000
+      access-log-path = ""
+      max-concurrent-write-limit = 0
+      max-enqueued-write-limit = 0
+      enqueued-write-timeout = 30000000000
+
+    [logging]
+      format = "auto"
+      level = "info"
+      suppress-logo = false
+
+    [[graphite]]
+      enabled = false
+      bind-address = ":2003"
+      database = "graphite"
+      retention-policy = ""
+      protocol = "tcp"
+      batch-size = 5000
+      batch-pending = 10
+      batch-timeout = "1s"
+      consistency-level = "one"
+      separator = "."
+      udp-read-buffer = 0
+
+    [[collectd]]
+      enabled = false
+      bind-address = ":25826"
+      database = "collectd"
+      retention-policy = ""
+      batch-size = 5000
+      batch-pending = 10
+      batch-timeout = "10s"
+      read-buffer = 0
+      typesdb = "/usr/share/collectd/types.db"
+      security-level = "none"
+      auth-file = "/etc/collectd/auth_file"
+      parse-multivalue-plugin = "split"
+
+    [[opentsdb]]
+      enabled = false
+      bind-address = ":4242"
+      database = "opentsdb"
+      retention-policy = ""
+      consistency-level = "one"
+      tls-enabled = false
+      certificate = "/etc/ssl/influxdb.pem"
+      batch-size = 1000
+      batch-pending = 5
+      batch-timeout = "1s"
+      log-point-errors = true
+
+    [[udp]]
+      enabled = false
+      bind-address = ":8089"
+      database = "udp"
+      retention-policy = ""
+      batch-size = 5000
+      batch-pending = 10
+      read-buffer = 0
+      batch-timeout = "1s"
+      precision = ""
+
+    [continuous_queries]
+      log-enabled = true
+      enabled = true
+      query-stats-enabled = false
+      run-interval = "1s"
+
+    [tls]
+      min-version = ""
+      max-version = ""
+
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kube-root-ca.crt
+  namespace: opsone
+  annotations:
+    kubernetes.io/description: >-
+      Contains a CA bundle that can be used to verify the kube-apiserver when
+      using internal endpoints such as the internal service IP or
+      kubernetes.default.svc. No other usage is guaranteed across distributions
+      of Kubernetes clusters.
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIC/jCCAeagAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
+    cm5ldGVzMB4XDTIzMDkxNDAzMzEwOVoXDTMzMDkxMTAzMzEwOVowFTETMBEGA1UE
+    AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALWT
+    d7LgQQnW8b4cDc9kdO3w2zCtEHwYGCDQ7tN7V4i5oYy8CmBViVvb8G7i4j5bXhHn
+    9VN5Et+e2rYJTPOye+ioWPPF0pgKfBfwWFJl9dCntFD4wwrIlmetzNIE6O2UXlbo
+    w8BbHaYLHfndbA9cabgviLAEm1dS3wiMSk0lHuJ9/7Cs4rsAsGoesqZqHjeOyC3l
+    x6P81q+mkILLW25eYZimhWaozA2z62XOqM/hxz+KIjtYHFgVqjuVw83yg1HfYurk
+    AZeAFviNWFGS8n/mm7wF5OvjdrByxvXC/tMCy1/z4eSbNTGSLxvSc6orW6UQkZiB
+    W3dZEvtzWAkkWYsZfIsCAwEAAaNZMFcwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
+    /wQFMAMBAf8wHQYDVR0OBBYEFLRtScjMwRkV5XDrZaImwsk8Z6PcMBUGA1UdEQQO
+    MAyCCmt1YmVybmV0ZXMwDQYJKoZIhvcNAQELBQADggEBAI/dd3asWavyaVCmc0uE
+    sccT9WWPq0vlKr7Jt05yRv19jtG0nnz0a02S8sMPJNZvYajBXAFyM5Ou3VUQH27u
+    VfQmn54ZV13zaRzMxTTMa4jgTDrDRM2diI9+C05wV6/lvCxbCcgHxuliqHfNfZsv
+    rrR81YeQeDA8FFrmi3oMqhz73f2wiiV4DTgXxiNPNoqFFCjD55dZBzIGBslc/rrU
+    3r94X75GPm3h9/5RRuWzQKihcV6v8CUjFDqeA5vV4rwlcKFwgnINsRL85Xt7AsgH
+    TODe6ke/zzkgxFrw1zL0udEJIopVeK3jNcbxdajr5jtNpPrg2cDkvQoPwdCma8rn
+    OLY=
+    -----END CERTIFICATE-----
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: opsone-config
+  namespace: opsone
+data:
+  config.ini: '192.168.39.117:30800'
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: opsone-nginx
+  namespace: opsone
+data:
+  default.conf: |
+    map $http_upgrade $connection_upgrade {
+            default upgrade;
+            '' close;
+        }
+    server {
+        listen  80 default_server;
+        location / {
+           proxy_http_version 1.1;
+           proxy_pass http://opsone-web;
+        }
+        location /api/v1/ {
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection $connection_upgrade;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_pass http://opsone-platform;
+        }
+    }
+  upstream.conf: |-
+    upstream opsone-platform {
+            server opsone-platform-svc:8888 weight=100;
+      keepalive 120;
+    }
+    upstream opsone-web {
+            server opsone-web-svc:3000 weight=100;
+      keepalive 120;
+    }
+
