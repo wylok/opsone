@@ -394,10 +394,9 @@ spec:
       protocol: TCP
       port: 3306
       targetPort: 3306
-      nodePort: 30013
   selector:
     app: mysql
-  type: NodePort
+  type: ClusterIP
   sessionAffinity: None
   externalTrafficPolicy: Cluster
   ipFamilies:
@@ -443,10 +442,9 @@ spec:
       protocol: TCP
       port: 8888
       targetPort: 8888
-      nodePort: 30798
   selector:
     app: opsone
-  type: NodePort
+  type: ClusterIP
   sessionAffinity: None
   externalTrafficPolicy: Cluster
   ipFamilies:
@@ -669,44 +667,10 @@ data:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: kube-root-ca.crt
-  namespace: opsone
-  annotations:
-    kubernetes.io/description: >-
-      Contains a CA bundle that can be used to verify the kube-apiserver when
-      using internal endpoints such as the internal service IP or
-      kubernetes.default.svc. No other usage is guaranteed across distributions
-      of Kubernetes clusters.
-data:
-  ca.crt: |
-    -----BEGIN CERTIFICATE-----
-    MIIC/jCCAeagAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
-    cm5ldGVzMB4XDTIzMDkxNDAzMzEwOVoXDTMzMDkxMTAzMzEwOVowFTETMBEGA1UE
-    AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALWT
-    d7LgQQnW8b4cDc9kdO3w2zCtEHwYGCDQ7tN7V4i5oYy8CmBViVvb8G7i4j5bXhHn
-    9VN5Et+e2rYJTPOye+ioWPPF0pgKfBfwWFJl9dCntFD4wwrIlmetzNIE6O2UXlbo
-    w8BbHaYLHfndbA9cabgviLAEm1dS3wiMSk0lHuJ9/7Cs4rsAsGoesqZqHjeOyC3l
-    x6P81q+mkILLW25eYZimhWaozA2z62XOqM/hxz+KIjtYHFgVqjuVw83yg1HfYurk
-    AZeAFviNWFGS8n/mm7wF5OvjdrByxvXC/tMCy1/z4eSbNTGSLxvSc6orW6UQkZiB
-    W3dZEvtzWAkkWYsZfIsCAwEAAaNZMFcwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
-    /wQFMAMBAf8wHQYDVR0OBBYEFLRtScjMwRkV5XDrZaImwsk8Z6PcMBUGA1UdEQQO
-    MAyCCmt1YmVybmV0ZXMwDQYJKoZIhvcNAQELBQADggEBAI/dd3asWavyaVCmc0uE
-    sccT9WWPq0vlKr7Jt05yRv19jtG0nnz0a02S8sMPJNZvYajBXAFyM5Ou3VUQH27u
-    VfQmn54ZV13zaRzMxTTMa4jgTDrDRM2diI9+C05wV6/lvCxbCcgHxuliqHfNfZsv
-    rrR81YeQeDA8FFrmi3oMqhz73f2wiiV4DTgXxiNPNoqFFCjD55dZBzIGBslc/rrU
-    3r94X75GPm3h9/5RRuWzQKihcV6v8CUjFDqeA5vV4rwlcKFwgnINsRL85Xt7AsgH
-    TODe6ke/zzkgxFrw1zL0udEJIopVeK3jNcbxdajr5jtNpPrg2cDkvQoPwdCma8rn
-    OLY=
-    -----END CERTIFICATE-----
-
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
   name: opsone-config
   namespace: opsone
 data:
-  config.ini: '192.168.39.117:30800'
+  config.ini: 'your-node-ip:30800'
 
 ---
 kind: ConfigMap
