@@ -1,4 +1,3 @@
-
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -130,7 +129,7 @@ spec:
         app: nginx
     spec:
       volumes:
-        - name: config
+        - name: nginx-config
           configMap:
             name: opsone-nginx
             defaultMode: 420
@@ -278,10 +277,10 @@ spec:
           image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.3.7'
           resources:
             limits:
-              cpu: '300m'
+              cpu: 300m
               memory: 300Mi
             requests:
-              cpu: '100m'
+              cpu: 100m
               memory: 100Mi
           volumeMounts:
             - name: volume-localtime
@@ -335,7 +334,7 @@ spec:
           emptyDir: {}
       containers:
         - name: redis
-          image: registry.cn-hangzhou.aliyuncs.com/opsone/redis:latest
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/redis:latest'
           ports:
             - containerPort: 6379
               protocol: TCP
@@ -387,7 +386,6 @@ apiVersion: v1
 metadata:
   name: opsone-mysql-svc
   namespace: opsone
-  annotations: {}
 spec:
   ports:
     - name: mysql
@@ -398,7 +396,6 @@ spec:
     app: mysql
   type: ClusterIP
   sessionAffinity: None
-  externalTrafficPolicy: Cluster
   ipFamilies:
     - IPv4
   ipFamilyPolicy: SingleStack
@@ -412,6 +409,7 @@ metadata:
   namespace: opsone
   labels:
     app: opsone-nginx-svc
+  annotations: {}
 spec:
   ports:
     - protocol: TCP
@@ -421,30 +419,6 @@ spec:
   selector:
     app: nginx
   type: NodePort
-  sessionAffinity: None
-  externalTrafficPolicy: Cluster
-  ipFamilies:
-    - IPv4
-  ipFamilyPolicy: SingleStack
-  internalTrafficPolicy: Cluster
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: opsone-svc
-  namespace: opsone
-  annotations:
-    prometheus.io/scrape: 'true'
-spec:
-  ports:
-    - name: opsone
-      protocol: TCP
-      port: 8888
-      targetPort: 8888
-  selector:
-    app: opsone
-  type: ClusterIP
   sessionAffinity: None
   externalTrafficPolicy: Cluster
   ipFamilies:
@@ -467,6 +441,29 @@ spec:
       targetPort: 6379
   selector:
     app: redis
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: opsone-svc
+  namespace: opsone
+  annotations:
+    prometheus.io/scrape: 'true'
+spec:
+  ports:
+    - name: opsone
+      protocol: TCP
+      port: 8888
+      targetPort: 8888
+  selector:
+    app: opsone
   type: ClusterIP
   sessionAffinity: None
   ipFamilies:
@@ -503,6 +500,7 @@ apiVersion: v1
 metadata:
   name: influxdb-config
   namespace: opsone
+  annotations: {}
 data:
   influxdb.conf: |+
     reporting-disabled = false
@@ -663,12 +661,48 @@ data:
       max-version = ""
 
 
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kube-root-ca.crt
+  namespace: opsone
+  annotations:
+    kubernetes.io/description: >-
+      Contains a CA bundle that can be used to verify the kube-apiserver when
+      using internal endpoints such as the internal service IP or
+      kubernetes.default.svc. No other usage is guaranteed across distributions
+      of Kubernetes clusters.
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIC/jCCAeagAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
+    cm5ldGVzMB4XDTIzMTExNDA3MTcyNVoXDTMzMTExMTA3MTcyNVowFTETMBEGA1UE
+    AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALqH
+    nQciIw2ZK5Pb+HNWssWKI7IRO5js4o0GDhOdGsr8U0DvR5fNvPmCD6fXdUb5kJpq
+    QV61p3XyN1vdhWqLZnKG+JO70ucgdudikAzZxxeB/ke2PJmRvwbTU0Q0jgCpdtpw
+    O8CtA5rGXEpVTFcSXjOM17mj0SC0aPlYiqTuHFmOlSK2eGwm1sgyWy2XC/xwi6R1
+    qL6/v8KglDcbqZdqLumpYsNfkKcG0WWzubg8bwX5zjreyYNXgR5KHAeiggfZMU5l
+    Grw3WjfP6nUC/9Fw0Lux0nwVGUpssW26/5ZuMViTTuvmMdL1VYEa5cq/RKxZxJ1g
+    N2IYVvtintURhQTZ3CUCAwEAAaNZMFcwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
+    /wQFMAMBAf8wHQYDVR0OBBYEFBeJepIsEwNCqvGKCHfCrV+2UVMQMBUGA1UdEQQO
+    MAyCCmt1YmVybmV0ZXMwDQYJKoZIhvcNAQELBQADggEBACVindOhYCbDtXmwiuBw
+    0wSO/DyZZ5o7MAWoMjHDa9LNEEPm7v3GujqIFn5tw24gDt8SvJ0rWcgXfBSvFBt1
+    o11yFpk8gAg5kyOp1ZyfXzhX6UEV3/QesPTY3dpTYj6tkafOYrcdF4DhzPZeAK6l
+    SicGBAbZonwioIJd17WKOMa0TwA0uOJgZtd633J3pvXhx/4JIpDVijHCNfIlabru
+    I/un3euXZsAzMcms/TRmwG/JQa2mQyhoWW/lJTIF4VvYDmTN991uox7omjHSafFJ
+    D7xIvleM+3l2vBEsWoQ5I5sOT4yjddVKzBrRBtNSCSIy14/ssWS4VwsTb0aJizwe
+    hak=
+    -----END CERTIFICATE-----
+
 ---
 kind: ConfigMap
 apiVersion: v1
 metadata:
   name: opsone-config
   namespace: opsone
+  annotations: {}
 data:
   config.ini: 'your-node-ip:30800'
 
@@ -695,11 +729,11 @@ data:
            proxy_set_header Upgrade $http_upgrade;
            proxy_set_header Connection $connection_upgrade;
            proxy_set_header X-Real-IP $remote_addr;
-           proxy_pass http://opsone-platform;
+           proxy_pass http://opsone;
         }
     }
   upstream.conf: |-
-    upstream opsone-platform {
+    upstream opsone {
             server opsone-svc:8888 weight=100;
       keepalive 120;
     }
@@ -707,4 +741,3 @@ data:
             server opsone-web-svc:3000 weight=100;
       keepalive 120;
     }
-
