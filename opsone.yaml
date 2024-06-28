@@ -112,25 +112,25 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: opsone-nginx
+  name: nginx
   namespace: opsone
   labels:
-    app: opsone-nginx
+    app: nginx
   annotations: {}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: opsone-nginx
+      app: nginx
   template:
     metadata:
       namespace: opsone
       creationTimestamp: null
       labels:
-        app: opsone-nginx
+        app: nginx
     spec:
       volumes:
-        - name: nginx-config
+        - name: config
           configMap:
             name: opsone-nginx
             defaultMode: 420
@@ -165,10 +165,10 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: opsone-platform
+  name: opsone
   namespace: opsone
   labels:
-    app: opsone-platform
+    app: opsone
     purpose: prod
   annotations:
     descheduler.alpha.kubernetes.io/evict: 'true'
@@ -177,13 +177,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: opsone-platform
+      app: opsone
       purpose: prod
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: opsone-platform
+        app: opsone
         purpose: prod
       annotations:
         descheduler.alpha.kubernetes.io/evict: 'true'
@@ -201,16 +201,16 @@ spec:
             defaultMode: 420
       containers:
         - name: opsone-platform
-          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-platform:v3.3.11'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone:v4.3.11'
           command:
             - /app/opsone/platform
           resources:
             limits:
-              cpu: '2'
-              memory: 500Mi
-            requests:
               cpu: 500m
               memory: 300Mi
+            requests:
+              cpu: 200m
+              memory: 100Mi
           volumeMounts:
             - name: opsone-config
               mountPath: /app/opsone/static/config
@@ -275,7 +275,7 @@ spec:
             type: ''
       containers:
         - name: opsone-web
-          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v3.3.7'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.3.7'
           resources:
             limits:
               cpu: 300m
@@ -420,7 +420,7 @@ spec:
       targetPort: 80
       nodePort: 30800
   selector:
-    app: opsone-nginx
+    app: nginx
   type: NodePort
   sessionAffinity: None
   externalTrafficPolicy: Cluster
@@ -433,19 +433,19 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: opsone-platform-svc
+  name: opsone-svc
   namespace: opsone
   annotations:
     prometheus.io/scrape: 'true'
 spec:
   ports:
-    - name: opsone-platform
+    - name: opsone
       protocol: TCP
       port: 8888
       targetPort: 8888
       nodePort: 30798
   selector:
-    app: opsone-platform
+    app: opsone
   type: NodePort
   sessionAffinity: None
   externalTrafficPolicy: Cluster
