@@ -14,7 +14,7 @@
 ## 快速安装
 - 在 K8S master执行下面命令即可
 ```
-kubectl create namespace namespaces
+kubectl create namespace opsone
 kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/opsone.yaml
 ```
 - 如果您想要定制 opsone的启动参数，请将该 YAML 文件下载到本地，并修改其中的 ConfigMap
