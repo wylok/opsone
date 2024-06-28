@@ -24,6 +24,3 @@
 - 用户名： admin 
 - 密码： Opsone1234 
 详细操作文档：
-## 平台界面
-![image](https://github.com/wylok/opsone/assets/10320996/689c6e10-0162-4070-bff9-5ad2c450ff6b)
-
