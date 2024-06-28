@@ -28,7 +28,7 @@ spec:
             defaultMode: 420
       containers:
         - name: influxdb
-          image: 'influxdb:1.8.4-alpine'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/influxdb:1.8.4-alpine'
           ports:
             - name: influxdb
               containerPort: 8086
@@ -83,7 +83,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: mysql
-          image: 'mysql:8.0'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/mysql:8.0'
           ports:
             - name: mysql
               containerPort: 3306
@@ -136,7 +136,7 @@ spec:
             defaultMode: 420
       containers:
         - name: nginx
-          image: 'nginx:1.22.0'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/nginx:1.22.0'
           ports:
             - containerPort: 80
               protocol: TCP
@@ -335,7 +335,7 @@ spec:
           emptyDir: {}
       containers:
         - name: redis
-          image: redis
+          image: registry.cn-hangzhou.aliyuncs.com/opsone/redis:latest
           ports:
             - containerPort: 6379
               protocol: TCP
