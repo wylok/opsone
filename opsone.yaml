@@ -700,7 +700,7 @@ data:
     }
   upstream.conf: |-
     upstream opsone-platform {
-            server opsone-platform-svc:8888 weight=100;
+            server opsone-svc:8888 weight=100;
       keepalive 120;
     }
     upstream opsone-web {
