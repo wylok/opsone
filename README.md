@@ -13,9 +13,10 @@
 - 容器实例mysql、redis、influxdb存储数据默认采用本地目录持久化方案，多node部署需自行修改为nfs或者其他分布式文件系统 
 ## 快速安装
 - 在 K8S master执行下面命令即可
-- ```kubectl apply -f https://github.com/wylok/opsone/blob/main/opsone.yaml 
+```
+kubectl apply -f https://github.com/wylok/opsone/blob/main/opsone.yaml 
+```
 - 如果您想要定制 opsone的启动参数，请将该 YAML 文件下载到本地，并修改其中的 ConfigMap
--
 ## 简单使用
 - 在浏览器中打开链接 http://your-node-ip-address:30800 
 - 输入初始用户名和密码，并登录
