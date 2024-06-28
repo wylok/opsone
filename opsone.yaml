@@ -278,10 +278,10 @@ spec:
           image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.3.7'
           resources:
             limits:
-              cpu: 300m
+              cpu: '300m'
               memory: 300Mi
             requests:
-              cpu: 100m
+              cpu: '100m'
               memory: 100Mi
           volumeMounts:
             - name: volume-localtime
