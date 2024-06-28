@@ -22,4 +22,4 @@ kubectl apply -f https://github.com/wylok/opsone/blob/main/opsone.yaml
 - 输入初始用户名和密码，并登录
 - 用户名： admin 
 - 密码： Opsone1234 
-详细操作文档：
+- 详细操作文档：
