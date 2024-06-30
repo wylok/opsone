@@ -24,3 +24,4 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/opsone.yaml
 - 用户名： admin 
 - 密码： Opsone1234
 ## 详细文档
+- https://zhuanlan.zhihu.com/p/701177000
