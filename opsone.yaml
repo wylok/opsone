@@ -131,7 +131,7 @@ spec:
       volumes:
         - name: nginx-config
           configMap:
-            name: opsone-nginx
+            name: nginx-config
             defaultMode: 420
       containers:
         - name: nginx
@@ -186,7 +186,7 @@ spec:
         purpose: prod
       annotations:
         descheduler.alpha.kubernetes.io/evict: 'true'
-        kubectl.kubernetes.io/restartedAt: '2024-05-21T15:59:13+08:00'
+        kubectl.kubernetes.io/restartedAt: '2024-07-01T09:17:44+08:00'
         prometheus.io/scrape: 'true'
     spec:
       volumes:
@@ -386,6 +386,7 @@ apiVersion: v1
 metadata:
   name: opsone-mysql-svc
   namespace: opsone
+  annotations: {}
 spec:
   ports:
     - name: mysql
@@ -662,6 +663,7 @@ data:
 
 
 
+
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -700,17 +702,7 @@ data:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: opsone-config
-  namespace: opsone
-  annotations: {}
-data:
-  config.ini: 'your-node-ip:30800'
-
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: opsone-nginx
+  name: nginx-config
   namespace: opsone
 data:
   default.conf: |
@@ -741,3 +733,12 @@ data:
             server opsone-web-svc:3000 weight=100;
       keepalive 120;
     }
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: opsone-config
+  namespace: opsone
+data:
+  config.ini: 'your-node-ip:30800'
