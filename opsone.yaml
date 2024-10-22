@@ -41,7 +41,7 @@ spec:
               mountPath: /etc/influxdb
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
@@ -96,11 +96,20 @@ spec:
               mountPath: /var/lib/mysql
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
       securityContext: {}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-app
+                    operator: In
+                    values:
+                      - mysql
       schedulerName: default-scheduler
   strategy:
     type: Recreate
@@ -146,7 +155,7 @@ spec:
               mountPath: /etc/nginx/conf.d/
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
@@ -344,7 +353,7 @@ spec:
               mountPath: /data
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
@@ -664,6 +673,7 @@ data:
 
 
 
+
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -680,22 +690,22 @@ data:
   ca.crt: |
     -----BEGIN CERTIFICATE-----
     MIIC/jCCAeagAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
-    cm5ldGVzMB4XDTIzMTExNDA3MTcyNVoXDTMzMTExMTA3MTcyNVowFTETMBEGA1UE
-    AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALqH
-    nQciIw2ZK5Pb+HNWssWKI7IRO5js4o0GDhOdGsr8U0DvR5fNvPmCD6fXdUb5kJpq
-    QV61p3XyN1vdhWqLZnKG+JO70ucgdudikAzZxxeB/ke2PJmRvwbTU0Q0jgCpdtpw
-    O8CtA5rGXEpVTFcSXjOM17mj0SC0aPlYiqTuHFmOlSK2eGwm1sgyWy2XC/xwi6R1
-    qL6/v8KglDcbqZdqLumpYsNfkKcG0WWzubg8bwX5zjreyYNXgR5KHAeiggfZMU5l
-    Grw3WjfP6nUC/9Fw0Lux0nwVGUpssW26/5ZuMViTTuvmMdL1VYEa5cq/RKxZxJ1g
-    N2IYVvtintURhQTZ3CUCAwEAAaNZMFcwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
-    /wQFMAMBAf8wHQYDVR0OBBYEFBeJepIsEwNCqvGKCHfCrV+2UVMQMBUGA1UdEQQO
-    MAyCCmt1YmVybmV0ZXMwDQYJKoZIhvcNAQELBQADggEBACVindOhYCbDtXmwiuBw
-    0wSO/DyZZ5o7MAWoMjHDa9LNEEPm7v3GujqIFn5tw24gDt8SvJ0rWcgXfBSvFBt1
-    o11yFpk8gAg5kyOp1ZyfXzhX6UEV3/QesPTY3dpTYj6tkafOYrcdF4DhzPZeAK6l
-    SicGBAbZonwioIJd17WKOMa0TwA0uOJgZtd633J3pvXhx/4JIpDVijHCNfIlabru
-    I/un3euXZsAzMcms/TRmwG/JQa2mQyhoWW/lJTIF4VvYDmTN991uox7omjHSafFJ
-    D7xIvleM+3l2vBEsWoQ5I5sOT4yjddVKzBrRBtNSCSIy14/ssWS4VwsTb0aJizwe
-    hak=
+    cm5ldGVzMB4XDTI0MTAyMjAzNTY0NFoXDTM0MTAyMDAzNTY0NFowFTETMBEGA1UE
+    AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL8D
+    EHEjMdRmsiq1r18rzS44mKY1ne7X7sD9Z23c3774zmop/giUZxv9IJTp+b/RO+vA
+    AGpE1ECw7uH5C7Es68bkQpoxSODJik5McEir4bDWB1E0bQQ/27MjQRl1k1MyQnOW
+    +BHQGbgTZayFKaTvKZh36V6/io896g/XJSub38pXzqtyi6QzuckVtBiHETmdmq3e
+    5RDLP1ptZhwiZFlb1tgrzY5DLt7FXrRtY/2wfZf5DerxRuQJUrDOL7GSQmYP89E0
+    dXlca8XZ6431I0YhZGXr0u4tbVh+M56rILBAwp7WhOXm0PV8h40AHnc3DT5OAeEG
+    T3atZYUxL5w1fm6LcrkCAwEAAaNZMFcwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
+    /wQFMAMBAf8wHQYDVR0OBBYEFLpyGarpcIVhePHosnNQh5QZnqJaMBUGA1UdEQQO
+    MAyCCmt1YmVybmV0ZXMwDQYJKoZIhvcNAQELBQADggEBAC/k+1PnWbfQB3j7ZfVt
+    26XznnBdV0qMngvUGIaw+RL2xEL5XA228TJTPSMnuF2W3uxfp+MJejPkoU7Kk59j
+    FmBBXdtAqPvXf9GO4iSdabrtKAONMKjHTBrMDD83LvjzkQfRZ+yvfjKq+H2TTd5a
+    ZYkGEVL0SO4ykYd48LJ788z1FGevqVPLvRFOReDnufxd0zxgWUNEuoKuCEZxgwPj
+    6SkZu8EGiLJTFbufKYtBDkLSV8QGyRjKqofa78qqaYaEy4IFKu2fmBGzJz50IJGO
+    scqMecaNrndg3g0OG/zsIiCVaJXov/MPptvBIUHtzOrHqkLXbgYfspFcKyRZ3R9Z
+    mhc=
     -----END CERTIFICATE-----
 
 ---
@@ -704,6 +714,7 @@ apiVersion: v1
 metadata:
   name: nginx-config
   namespace: opsone
+  annotations: {}
 data:
   default.conf: |
     map $http_upgrade $connection_upgrade {
@@ -740,5 +751,6 @@ apiVersion: v1
 metadata:
   name: opsone-config
   namespace: opsone
+  annotations: {}
 data:
   config.ini: 'your-node-ip:30800'
