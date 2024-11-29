@@ -214,10 +214,10 @@ spec:
             - /app/opsone/platform
           resources:
             limits:
-              cpu: 500m
-              memory: 300Mi
-            requests:
               cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
               memory: 100Mi
           volumeMounts:
             - name: opsone-config
@@ -286,11 +286,11 @@ spec:
           image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.3.7'
           resources:
             limits:
-              cpu: 300m
-              memory: 300Mi
-            requests:
               cpu: 100m
               memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
           volumeMounts:
             - name: volume-localtime
               mountPath: /etc/localtime
