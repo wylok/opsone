@@ -14,6 +14,7 @@
 ## 快速安装
 - 在 K8S master执行下面命令即可
 ```
+kubectl label nodes 'your-node-name' node-app=mysql  #命令设置某个node标签为node-app:mysql
 kubectl create namespace opsone
 kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/opsone.yaml
 kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-server.yaml
