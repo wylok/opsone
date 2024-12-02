@@ -19,9 +19,11 @@ kubectl create namespace opsone
 kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/opsone.yaml
 kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-server.yaml
 ```
+- 修改configMap中的opsone-config文件，修改config.ini对应的your-node-ip:30800并保存
+重新启动opsone-server容器
 - 如果您想要定制 opsone的启动参数，请将该 YAML 文件下载到本地，并修改其中的 ConfigMap
 ## 简单使用
-- 在浏览器中打开链接 http://your-node-ip-address:30800 
+- 在浏览器中打开链接 http://your-node-ip:30800 
 - 输入初始用户名和密码，并登录
 - 用户名： admin 
 - 密码： Opsone1234
