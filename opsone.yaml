@@ -176,7 +176,7 @@ metadata:
   name: opsone
   namespace: opsone
   labels:
-    app: opsone
+    app: opsone-server
     purpose: prod
   annotations:
     descheduler.alpha.kubernetes.io/evict: 'true'
@@ -185,13 +185,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: opsone
+      app: opsone-server
       purpose: prod
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: opsone
+        app: opsone-server
         purpose: prod
       annotations:
         descheduler.alpha.kubernetes.io/evict: 'true'
@@ -208,7 +208,7 @@ spec:
             name: opsone-config
             defaultMode: 420
       containers:
-        - name: opsone-platform
+        - name: opsone-server
           image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone:v4.3.11'
           command:
             - /app/opsone/platform
@@ -462,18 +462,18 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: opsone-svc
+  name: opsone-server-svc
   namespace: opsone
   annotations:
     prometheus.io/scrape: 'true'
 spec:
   ports:
-    - name: opsone
+    - name: opsone-server
       protocol: TCP
       port: 8888
       targetPort: 8888
   selector:
-    app: opsone
+    app: opsone-server
   type: ClusterIP
   sessionAffinity: None
   ipFamilies:
@@ -491,7 +491,7 @@ metadata:
     prometheus.io/scrape: 'true'
 spec:
   ports:
-    - name: opsone
+    - name: opsone-web
       protocol: TCP
       port: 3000
       targetPort: 3000
