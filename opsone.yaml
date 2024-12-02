@@ -732,12 +732,12 @@ data:
            proxy_set_header Upgrade $http_upgrade;
            proxy_set_header Connection $connection_upgrade;
            proxy_set_header X-Real-IP $remote_addr;
-           proxy_pass http://opsone;
+           proxy_pass http://opsone-server;
         }
     }
   upstream.conf: |-
-    upstream opsone {
-            server opsone-svc:8888 weight=100;
+    upstream opsone-server {
+            server opsone-server-svc:8888 weight=100;
       keepalive 120;
     }
     upstream opsone-web {
