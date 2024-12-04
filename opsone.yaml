@@ -173,7 +173,7 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: opsone
+  name: opsone-server
   namespace: opsone
   labels:
     app: opsone-server
@@ -209,9 +209,9 @@ spec:
             defaultMode: 420
       containers:
         - name: opsone-server
-          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone:v4.3.11'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-server:v4.5'
           command:
-            - /app/opsone/platform
+            - /app/opsone/opsone-server
           resources:
             limits:
               cpu: 200m
@@ -283,7 +283,7 @@ spec:
             type: ''
       containers:
         - name: opsone-web
-          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.3.7'
+          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.5'
           resources:
             limits:
               cpu: 100m
