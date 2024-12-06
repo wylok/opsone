@@ -209,7 +209,7 @@ spec:
             defaultMode: 420
       containers:
         - name: opsone-server
-          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-server:v4.5'
+          image: 'registry.cn-beijing.aliyuncs.com/opsone/opsone-server:v4.5'
           command:
             - /app/opsone/opsone-server
           resources:
@@ -283,7 +283,7 @@ spec:
             type: ''
       containers:
         - name: opsone-web
-          image: 'registry.cn-hangzhou.aliyuncs.com/opsone/opsone-web:v4.5'
+          image: 'registry.cn-beijing.aliyuncs.com/opsone/opsone-web:v4.5'
           resources:
             limits:
               cpu: 100m
