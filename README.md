@@ -30,3 +30,5 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 - 密码： Opsone1234
 ## 详细文档
 - https://zhuanlan.zhihu.com/p/701177000
+- ![image](https://github.com/user-attachments/assets/594d9fce-e137-4cf6-9154-95cb3abe663a)
+
