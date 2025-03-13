@@ -31,7 +31,7 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 - 修改ConfigMap中opsone-config的config.ini对应的your-node-ip为node内网IP地址，保证需要管理的服务器与该IP地址可以互通，如果是异构网络建议配置为公网IP地址。
 - 按照平台菜单自上而下的顺序进行配置，创建部门-->业务组-->IDC池-->ssh密钥-->资源池-->资源组-->堡垒机-->监控规则-->多云管理-->密钥管理-->工作工单-->工单流程-->平台配置-->agent管理-->消息中心
 - 配置资源池需注意，后台是按照ip段数量并发执行，为了保证自动发现效率单IP段内IP数量不要超过50
-## 详细文档
+## 详细教程
 - https://zhuanlan.zhihu.com/p/701177000
 - ![image](https://github.com/user-attachments/assets/594d9fce-e137-4cf6-9154-95cb3abe663a)
 
