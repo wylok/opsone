@@ -22,6 +22,8 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 重新启动opsone-server容器
 - 如果您想要定制 opsone的启动参数，请将该 YAML 文件下载到本地，并修改其中的ConfigMap
 - 执行指令 watch kubectl get pods -n opsone，等待 opsone名称空间中所有的 Pod 就绪
+- 配置服务器自动发现需要root账号,如无法使用root也可手动在被管理服务器上执行:
+curl -s http://your-node-ip:30800/api/v1/ag/install.sh|bash
 ## 简单使用
 - 在浏览器中打开链接 http://your-node-ip:30800 
 - 输入初始用户名和密码，并登录
