@@ -210,6 +210,9 @@ spec:
       containers:
         - name: opsone-server
           image: 'registry.cn-beijing.aliyuncs.com/opsone/opsone-server:v4.5'
+          env:
+            - name: RUN_ENV
+              value: k8s
           command:
             - /app/opsone/opsone-server
           resources:
