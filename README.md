@@ -13,7 +13,7 @@
 - 容器实例mysql、redis、influxdb存储数据默认采用本地目录持久化方案
 - 更多解决方案请参考平台文档:  https://zhuanlan.zhihu.com/p/701177000
 ## 快速安装
-K8S版本部署
+K8环境部署
 ```
 kubectl label nodes 'your-node-name' node-app=mysql  #命令设置某个node标签为node-app:mysql
 kubectl create namespace opsone
@@ -26,7 +26,7 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 - 执行指令 watch kubectl get pods -n opsone，等待 opsone名称空间中所有的 Pod 就绪
 - 也可以手动安装agent,在被管理服务器上执行:curl -s http://your-node-ip:30800/api/v1/ag/install.sh|bash
 
-Docker版本部署
+Docker环境部署
 ```
 wget https://raw.githubusercontent.com/wylok/opsone/main/docker-opsone.tgz
 tar -zxvf docker-opsone.tgz
