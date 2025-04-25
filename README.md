@@ -7,7 +7,7 @@
 - demo地址：http://115.190.10.126  用户名:guest   密码: Opsone1234
 
 ## 环境依赖 
-- 平台采用容器化部署故依赖k8s或docker环境，请自行部署k8s集群或docker环境。
+- 平台采用容器化部署故依赖k8s或docker环境，请自行部署相关运行环境。
 - 管控服务器系统不支持windows，交换机仅限思科、华为和H3C。
 - mysql因需要数据持久化，默认会强制部署到标签为node-app:mysql的node节点，请指定1台node设置相应标签
 - 容器实例mysql、redis、influxdb存储数据默认采用本地目录持久化方案
