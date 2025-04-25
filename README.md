@@ -24,7 +24,7 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 重新启动opsone-server容器
 - 如果您想要定制 opsone的启动参数，请将该 YAML 文件下载到本地，并修改其中的ConfigMap
 - 执行指令 watch kubectl get pods -n opsone，等待 opsone名称空间中所有的 Pod 就绪
-- 也可以手动安装agent,在被管理服务器上执行:curl -s http://your-node-ip:30800/api/v1/ag/install.sh|bash
+- 如果选择手动安装agent,在被管理服务器上执行:curl -s http://your-node-ip:30800/api/v1/ag/install.sh|bash
 
 Docker环境部署
 ```
@@ -37,7 +37,7 @@ sh start_up.sh
 ```
 - 不要修改解压缩后opsone文件夹的名称
 - docker版需要用到docker-compose，请自行安装
-- 也可以手动安装agent,在被管理服务器上执行:curl -s http://your-host-ip/api/v1/ag/install.sh|bash
+- 如果选择手动安装agent,在被管理服务器上执行:curl -s http://your-host-ip/api/v1/ag/install.sh|bash
 
 ## 简单使用
 - k8s版：在浏览器中打开链接 http://your-node-ip:30800
