@@ -50,5 +50,5 @@ sh start_up.sh
 ## 详细教程
 - https://zhuanlan.zhihu.com/p/701177000
 ## 加入微信群
-- ![image](https://github.com/user-attachments/assets/594d9fce-e137-4cf6-9154-95cb3abe663a)
+- ![image](https://raw.githubusercontent.com/wylok/opsone/main/g1.jpg)
 
