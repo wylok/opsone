@@ -13,7 +13,7 @@
 - 容器实例mysql、redis、influxdb存储数据默认采用本地目录持久化方案
 - 更多解决方案请参考平台文档:  https://zhuanlan.zhihu.com/p/701177000
 ## 快速安装
-K8环境部署
+K8S环境部署
 ```
 kubectl label nodes 'your-node-name' node-app=mysql  #命令设置某个node标签为node-app:mysql
 kubectl create namespace opsone
