@@ -27,7 +27,7 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 
 Docker版本部署
 ```
-wget https://gitee.com/opsone/opsone/raw/main/docker-opsone.tgz
+wget https://raw.githubusercontent.com/wylok/opsone/main/docker-opsone.tgz
 tar -zxvf docker-opsone.tgz
 cd opsone
 修改config.ini对应的ip为所部署服务器真实ip
