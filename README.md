@@ -1,10 +1,12 @@
 ## 前言
 - 开发初衷是想把自己在运维领域所积累十余年的创新实践经验，用轻量化一站式智能运维平台的方式解决运维日常工作痛点问题，让运维工作可以更快速、简单与高效
+- ![image](https://raw.githubusercontent.com/wylok/opsone/main/images/login.jpg)
 ## 平台介绍
 - 平台是集轻量化、极简操作、高效运维为一体的智能运维平台，具备纳管、监控、巡检、自愈、支持异构网络环境、秒级执行运维作业、多云管理，运维工单、k8s集群管理,webshell,安全审计,堡垒机等功能。
 - 平台提供全生命周期的自动化运维工具体系，提供易用的操作界面和清晰的运维管理流程，降低从自动化到智能化运维的建设成本，提高运维管理效率，保障业务连续性。
 - 平台采用模块化开发、容器部署的架构模型，前端基于vue-element-admin框架，后端使用go语言开发。
 - demo地址：http://115.190.10.126  用户名:guest   密码: Opsone1234
+- ![image](https://raw.githubusercontent.com/wylok/opsone/main/images/opsone.jpg)
 
 ## 环境依赖 
 - 平台采用容器化部署故依赖k8s或docker环境，请自行部署相关运行环境。
@@ -17,8 +19,8 @@ K8S环境部署
 ```
 kubectl label nodes 'your-node-name' node-app=mysql  #命令设置某个node标签为node-app:mysql
 kubectl create namespace opsone
-kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/opsone.yaml
-kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-server.yaml
+kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/k8s/opsone.yaml
+kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/k8s/metrics-server.yaml
 ```
 - 修改configMap中的opsone-config文件，修改config.ini对应的your-node-ip:30800并保存
 重新启动opsone-server容器
@@ -27,7 +29,7 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/metrics-ser
 
 Docker环境部署
 ```
-wget https://raw.githubusercontent.com/wylok/opsone/main/docker-opsone.tgz
+wget https://raw.githubusercontent.com/wylok/opsone/main/docker/docker-opsone.tgz
 tar -zxvf docker-opsone.tgz
 cd opsone
 修改config.ini对应的ip为所部署服务器真实ip
@@ -51,5 +53,5 @@ sh start_up.sh
 ## 详细教程
 - https://zhuanlan.zhihu.com/p/701177000
 ## 加入微信群
-- ![image](https://raw.githubusercontent.com/wylok/opsone/main/g1.jpg)
+- ![image](https://raw.githubusercontent.com/wylok/opsone/main/images/wx.jpg)
 
