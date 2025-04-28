@@ -540,12 +540,12 @@
 		}
 
 		.wrapper.style2 {
-			background-color: #83d3c9;
-			background-image: url("images/light-bl.svg"), url("images/light-br.svg");
-			background-position: bottom left, bottom right;
+			background-image: url("../images/login.jpg");
+			background-position: center right;
 			background-repeat: no-repeat, no-repeat;
-			background-size: 25em, 25em;
-			color: white;
+			background-size: 100%, 100%;
+			filter: opacity(80%);
+			color: black;
 		}
 
 			.wrapper.style2 .button:hover {

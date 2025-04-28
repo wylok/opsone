@@ -73,83 +73,56 @@
 					</footer>
 				</div>
 			</section>
-		
 		<!-- Main -->
 			<article id="main">
-
 				<header class="special container">
 					<span class="icon fa-bar-chart-o"></span>
 					<h2>opsone平台具备设备资源自动发现纳管,支持异构网络环境</h2>
 					<h3>包含<strong>RBAC模型</strong>,<strong>智能监控</strong>,<strong>多云管理</strong>,<strong>k8s管理</strong>,<strong>webshell</strong>,<strong>运维作业</strong>,<strong>运维工单</strong>,<strong>安全审计</strong>等功能</h3>
 					<p>以资源为核心的全生命周期管理体系，简捷的操作界面和运维管理流程，降低从自动化到智能化运维的建设成本，提高运维管理效率，保障业务连续性</p>
 				</header>
-					
 				<!-- One -->
 					<section class="wrapper style2 container special-alt">
 						<div class="row half">
 							<div class="8u">
-							
-								<header>
-									<h2>Behold the <strong>icons</strong> that visualize what you’re all about. or just take up space. your call bro.</h2>
+								<header style="margin-top: 15%">
+									<h2><strong>JWT登录及安全加密</strong></h2>
 								</header>
-								<p>Sed tristique purus vitae volutpat ultrices. Aliquam eu elit eget arcu comteger ut fermentum lorem. Lorem ipsum dolor sit amet. Sed tristique purus vitae volutpat ultrices. eu elit eget commodo. Sed tristique purus vitae volutpat ultrices. Aliquam eu elit eget arcu commodo.</p>
-								<footer>
-									<ul class="buttons">
-										<li><a href="#" class="button">Find Out More</a></li>
-									</ul>
-								</footer>
-							
+								<p>平台采用JWT被广泛使用的简单而强大的身份验证和授权技术进行登录验证,提高平台的安全性和用户体验</p>
+								<p>agent主动push与server端通信采用websocket长连接+32位密钥的AES对称分组加密算法,支持异构网络环境</p>
+								<p>敏感数据如登录密码、ssh密钥、k8s配置文件、公有云密钥等均采用AES算法加密后存入数据库防止数据泄露</p>
 							</div>
-							<div class="4u skel-cell-important">
-							
-								<ul class="feature-icons">
-									<li><span class="icon fa-clock-o"><span class="label">Feature 1</span></span></li>
-									<li><span class="icon fa-volume-up"><span class="label">Feature 2</span></span></li>
-									<li><span class="icon fa-laptop"><span class="label">Feature 3</span></span></li>
-									<li><span class="icon fa-inbox"><span class="label">Feature 4</span></span></li>
-									<li><span class="icon fa-lock"><span class="label">Feature 5</span></span></li>
-									<li><span class="icon fa-cog"><span class="label">Feature 6</span></span></li>
-								</ul>
-							
-							</div>				
 						</div>
 					</section>
-					
 				<!-- Two -->
 					<section class="wrapper style1 container special">
 						<div class="row">
 							<div class="4u">
-							
 								<section>
 									<span class="icon feature fa-check"></span>
 									<header>
-										<h3>This is Something</h3>
+										<h3>快速部署</h3>
 									</header>
-									<p>Sed tristique purus vitae volutpat ultrices. Aliquam eu elit eget arcu commodo suscipit dolor nec nibh. Proin a ullamcorper elit, et sagittis turpis. Integer ut fermentum.</p>
+									<p style="text-align: left">容器化方式部署支持docker或k8s环境,仅需执行几条简单命令即可完成opsone平台的搭建,使用go语言开发,资源占用极低,重采集轻操作不会对现有环境造成影响.</p>
 								</section>
-							
 							</div>
 							<div class="4u">
-							
 								<section>
 									<span class="icon feature fa-check"></span>
 									<header>
-										<h3>Also Something</h3>
+										<h3>极简原则</h3>
 									</header>
-									<p>Sed tristique purus vitae volutpat ultrices. Aliquam eu elit eget arcu commodo suscipit dolor nec nibh. Proin a ullamcorper elit, et sagittis turpis. Integer ut fermentum.</p>
+									<p style="text-align: left">简单配置服务器或者交换机IP段即可完成对资源的自动发现、纳管以及获得12项系统监控及进程级TOP数据.上传公有云密钥或k8s的config文件即可完成多云管理或k8s多集群管理.</p>
 								</section>
-							
 							</div>
 							<div class="4u">
-							
 								<section>
 									<span class="icon feature fa-check"></span>
 									<header>
-										<h3>Probably Something</h3>
+										<h3>代码开源</h3>
 									</header>
-									<p>Sed tristique purus vitae volutpat ultrices. Aliquam eu elit eget arcu commodo suscipit dolor nec nibh. Proin a ullamcorper elit, et sagittis turpis. Integer ut fermentum.</p>
+									<p style="text-align: left">做为开源理念的拥护者及践行者,平台代码采用GPL开源协议,可以自由复制、传播、分享、修改源代码,但必须保持修改后程序代码的开源特性,不允许私有化或商业发布.</p>
 								</section>
-							
 							</div>
 						</div>
 					</section>
