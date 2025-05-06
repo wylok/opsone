@@ -35,7 +35,6 @@ cd opsone
 sh start_up.sh
 停止opsone平台服务在opsone目录下执行docker-compose down
 ```
-- 不要修改解压缩后opsone文件夹的名称
 - docker版需要用到docker-compose，请自行安装
 - 如果非root账号选择手动安装agent,在被管理服务器上执行:curl -s http://your-host-ip/api/v1/ag/install.sh|bash
 
