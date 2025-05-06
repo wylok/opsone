@@ -31,10 +31,13 @@ Docker环境部署
 wget https://raw.githubusercontent.com/wylok/opsone/main/docker/docker-opsone.tgz
 tar -zxvf docker-opsone.tgz
 cd opsone
-修改config.ini对应的ip为所部署服务器真实ip
+centos系统执行: mv default.centos.conf default.conf
+ubuntu系统执行: mv default.ubuntu.conf default.conf
+修改config.ini对应的your-host-ip为所部署服务器真实ip
 sh start_up.sh
 停止opsone平台服务在opsone目录下执行docker-compose down
 ```
+- 目前仅适配centos和ubuntu系统
 - 不要修改解压缩后opsone文件夹的名称
 - docker版需要用到docker-compose，请自行安装
 - 如果非root账号选择手动安装agent,在被管理服务器上执行:curl -s http://your-host-ip/api/v1/ag/install.sh|bash
