@@ -22,7 +22,7 @@ kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/k8s/opsone.
 kubectl apply -f https://raw.githubusercontent.com/wylok/opsone/main/k8s/metrics-server.yaml
 ```
 - 修改configMap中的opsone-config文件，修改config.ini对应的your-node-ip:30800并保存
-重新启动opsone-server容器
+- 重新启动opsone-server容器
 - 执行指令 watch kubectl get pods -n opsone，等待 opsone名称空间中所有的 Pod 就绪
 - 如果非root账号选择手动安装agent,在被管理服务器上执行:curl -s http://your-node-ip:30800/api/v1/ag/install.sh|bash
 
