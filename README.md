@@ -6,7 +6,9 @@
 - 平台提供全生命周期的自动化运维工具体系，提供易用的操作界面和清晰的运维管理流程，降低从自动化到智能化运维的建设成本，提高运维管理效率，保障业务连续性。
 - 平台采用模块化开发、容器部署的架构模型，前端基于vue-element-admin框架，后端使用go语言开发。
 - demo地址：http://115.190.10.126  用户名:guest   密码: Opsone1234
+- ![image](https://raw.githubusercontent.com/wylok/opsone/main/images/opsone.jpg)
 - 平台网站: https://wylok.github.io/opsone/
+- ![image](https://raw.githubusercontent.com/wylok/opsone/main/images/web.jpg)
 
 ## 环境依赖 
 - 平台采用容器化部署故依赖k8s或docker环境，请自行部署相关运行环境。
